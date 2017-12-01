@@ -46,6 +46,13 @@
 
         this.$container = $('<div class="bootstrap-tagsinput"></div>');
         this.$input = $('<input type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
+        var input = this.$input;
+        this.$input.focus(function() {
+            input.parents('.bootstrap-tagsinput').addClass('focused');
+        });
+        this.$input.blur(function () {
+            $(this).parents('.bootstrap-tagsinput').removeClass('focused');
+        });
 
         this.$element.before(this.$container);
 
