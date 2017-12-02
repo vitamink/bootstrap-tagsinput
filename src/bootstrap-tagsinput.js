@@ -50,7 +50,7 @@
         this.$input.focus(function() {
             input.parents('.bootstrap-tagsinput').addClass('focused');
         });
-        this.$input.blur(function () {
+        this.$input.blur(function() {
             $(this).parents('.bootstrap-tagsinput').removeClass('focused');
         });
 
@@ -125,7 +125,7 @@
                 }
 
                 var inputNode = $('.tt-input', self.$container);
-                if (!$.isArray(inputNode)) {
+                if (inputNode !== null) {
                     inputNode.typeahead('val', '');
                 }
 
@@ -182,7 +182,7 @@
             }
 
             var inputNode = $('.tt-input', self.$container);
-            if (!$.isArray(inputNode)) {
+            if (inputNode !== null) {
                 inputNode.typeahead('val', '');
             }
 
@@ -379,35 +379,33 @@
 
                 self.$input.typeahead(typeaheadConfig, typeaheadDatasets).on('typeahead:selected',
                     $.proxy(function(obj, datum) {
-                            if (typeaheadDatasets.valueKey)
-                                self.add(datum[typeaheadDatasets.valueKey]);
-                            else
-                                self.add(datum);
-                            self.$input.typeahead('val', '');
-                        },
-                        self));
+                        if (typeaheadDatasets.valueKey)
+                            self.add(datum[typeaheadDatasets.valueKey]);
+                        else
+                            self.add(datum);
+                        self.$input.typeahead('val', '');
+                    }, self));
             }
 
             self.$container.on('click',
                 $.proxy(function(event) {
-                        if (! self.$element.attr('disabled')) {
-                            self.$input.removeAttr('disabled');
-                        }
-                        self.$input.focus();
-                    },
-                    self));
+                    if (! self.$element.attr('disabled')) {
+                        self.$input.removeAttr('disabled');
+                    }
+                    self.$input.focus();
+                }, self));
 
             if (self.options.addOnBlur && self.options.freeInput) {
                 self.$input.on('focusout',
                     $.proxy(function(event) {
-                            // HACK: only process on focusout when no typeahead opened, to
-                            //       avoid adding the typeahead text as tag
-                            if ($('.typeahead, .twitter-typeahead', self.$container).length === 0) {
-                                self.add(self.$input.val());
-                                self.$input.val('');
-                            }
-                        },
-                        self));
+                        // HACK: only process on focusout when no typeahead opened, to
+                        //       avoid adding the typeahead text as tag
+                        if ($('.typeahead, .twitter-typeahead', self.$container).length === 0 ||
+                            $('.tt-dataset .tt-suggestion').length === 0) {
+                            self.add(self.$input.val());
+                            self.$input.val('');
+                        }
+                    }, self));
             }
 
 
